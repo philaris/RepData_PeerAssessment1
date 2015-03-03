@@ -19,7 +19,22 @@ activity <- read.csv("activity.csv", header = TRUE)
 
 ## What is mean total number of steps taken per day?
 
+We use library dplyr to manipulate the data.
+```{r message=FALSE}
+library(dplyr)
+```
 
+```{r}
+totperday <- activity %>% group_by(date) %>% summarize(tot=sum(steps))
+hist(totperday$tot, main="Histogram of total number of steps per day",
+     xlab="Total number of steps")
+meantotday <- mean(totperday$tot, na.rm=TRUE)
+mediantotday <- median(totperday$tot, na.rm=TRUE)
+options(scipen=100)
+```
+
+For the **total number of steps per day**,
+the **mean** is `r signif(meantotday, 7)` and the **median** is `r mediantotday`.
 
 ## What is the average daily activity pattern?
 
