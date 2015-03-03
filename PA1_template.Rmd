@@ -38,7 +38,15 @@ the **mean** is `r signif(meantotday, 7)` and the **median** is `r mediantotday`
 
 ## What is the average daily activity pattern?
 
+```{r}
+meanperint <- activity %>% group_by(interval) %>% summarize(intmean=mean(steps, na.rm=TRUE))
+plot(meanperint, type = "l", ylab = "average number of steps per interval")
+```
 
+The 5-minute interval with the maximum average number of steps is:
+```{r}
+meanperint[which.max(meanperint$intmean),]$interval
+```
 
 ## Imputing missing values
 
