@@ -40,7 +40,7 @@ options(scipen=100)
 ```
 
 For the **total number of steps per day**,
-the **mean** is `r signif(meantotday, 7)` and the **median** is `r mediantotday`.
+the **mean** is `r meantotday` and the **median** is `r mediantotday`.
 
 ## What is the average daily activity pattern?
 
@@ -62,12 +62,33 @@ meanperint[which.max(meanperint$intmean),]$interval
 sum(is.na(activity$steps))
 ```
 
-2. We substitute each missing NA steps value with the average value
+2. We will substitute each missing NA steps value with the average value
 for the 5-minute interval from the previous part.
 
 ```{r}
 fixstep <- function(inter, step) { if (is.na(step)) meanperint[which(meanperint$interval == inter),]$intmean else step }
-activitywithoutna <- activity %>% transform( stepsnew = mapply(fixstep, interval, steps) )
 ```
+
+3. Here is the new dataset with the new column stepsfixed.
+```{r}
+activitywithoutna <- activity %>% transform( stepsfixed = mapply(fixstep, interval, steps) )
+```
+
+4. Here is the new histogram:
+```{r}
+totnewperday <- activitywithoutna %>% group_by(date) %>% summarize(tot=sum(stepsfixed))
+hist(totnewperday$tot, main="Histogram of total number of steps per day (without NA)",
+     xlab="Total number of steps (without NA)")
+```
+
+And here are the
+```{r}
+meantotnewday <- mean(totnewperday$tot, na.rm=TRUE)
+mediantotnewday <- median(totnewperday$tot, na.rm=TRUE)
+```
+For the **total number of steps per day without NA**,
+the **mean** is `r meantotnewday` and the **median** is `r mediantotnewday`.
+
+
 
 ## Are there differences in activity patterns between weekdays and weekends?
