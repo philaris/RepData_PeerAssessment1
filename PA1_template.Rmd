@@ -29,7 +29,7 @@ totperday <- activity %>% group_by(date) %>% summarize(tot=sum(steps))
 2. Here is the histogram:
 ```{r}
 hist(totperday$tot, main="Histogram of total number of steps per day",
-     xlab="Total number of steps")
+     xlab="Total number of steps", labels=TRUE, ylim=c(0,40))
 ```
 
 3. Here are the mean and median computations:
@@ -78,10 +78,10 @@ activitywithoutna <- activity %>% transform( stepsfixed = mapply(fixstep, interv
 ```{r}
 totnewperday <- activitywithoutna %>% group_by(date) %>% summarize(tot=sum(stepsfixed))
 hist(totnewperday$tot, main="Histogram of total number of steps per day (without NA)",
-     xlab="Total number of steps (without NA)")
+     xlab="Total number of steps (without NA)", labels=TRUE, ylim=c(0,40))
 ```
 
-And here are the
+And here are the mean and median without NA:
 ```{r}
 meantotnewday <- mean(totnewperday$tot, na.rm=TRUE)
 mediantotnewday <- median(totnewperday$tot, na.rm=TRUE)
@@ -89,6 +89,13 @@ mediantotnewday <- median(totnewperday$tot, na.rm=TRUE)
 For the **total number of steps per day without NA**,
 the **mean** is `r meantotnewday` and the **median** is `r mediantotnewday`.
 
-
+The two mean values are the same (`r meantotnewday`) and the new median value
+is the same as the mean values. This happens because the NA values are in eight
+days and these eight days have no non-NA value at all. As a result, the updated
+mean for each of these eight days becomes `r meantotnewday` (compare the two
+histograms to see that the only difference is the middle rectangle with frequency
+28 and 36) and the new mean for all days remains the same as the previously
+computed mean. Moreover, the new median value is expected since there are eight
+copies of `r meantotnewday` in the data.
 
 ## Are there differences in activity patterns between weekdays and weekends?
