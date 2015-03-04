@@ -99,3 +99,11 @@ computed mean. Moreover, the new median value is expected since there are eight
 copies of `r meantotnewday` in the data.
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+1. We create the wkdtype variable in the dataset activitywkd:
+```{r}
+convdaytype <- function(x) { if (x %in% c("Saturday", "Sunday")) "weekend" else "weekday" }
+activitywkd <- activity %>%
+  transform( fullwkday = as.factor(weekdays(as.Date(date))),
+             wkdtype = as.factor(sapply(weekdays(as.Date(date)), convdaytype)) )
+```
