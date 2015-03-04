@@ -102,21 +102,31 @@ copies of `r meantotnewday` in the data.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-1. We create the wkdtype variable in the dataset activitywkd:
+1. We create the wkdtype variable in the new dataset activitywkd:
 ```{r}
 convdaytype <- function(x) { if (x %in% c("Saturday", "Sunday")) "weekend" else "weekday" }
 activitywkd <- activity %>%
-  transform( fullwkday = as.factor(weekdays(as.Date(date))),
-             wkdtype = as.factor(sapply(weekdays(as.Date(date)), convdaytype)) )
+  transform( wkdtype = as.factor(sapply(weekdays(as.Date(date)), convdaytype)) )
 ```
 
 2. Here are the plots. As expected, we can see that activity on
-work days starts earlier than weekends, but it also finishes earlier.
-```{r}
+work days starts earlier than weekends and it is also more intense
+in the mornings, but it also finishes earlier and is less intense
+in the night. Moreover, in weekends activity is more balanced
+through the day, whereas for work days there is a spike in the
+morning.
+```{r fig.height=10}
 meanperintwkd <- activitywkd %>% group_by(interval, wkdtype) %>%
   summarize(intmean=mean(steps, na.rm=TRUE))
 meanworkday <- meanperintwkd %>% filter(wkdtype == "weekday")
 meanweekend <- meanperintwkd %>% filter(wkdtype == "weekend")
-plot(meanworkday$interval, meanworkday$intmean, type = "l", col="blue")
-lines(meanweekend$interval, meanweekend$intmean, type = "l", col="red")
+par(mfrow=c(2,1))
+plot(meanworkday$interval, meanworkday$intmean,
+     type = "l", col="blue", ylim=c(0,250), xlab = "interval",
+     ylab = "average number of steps, weekday",
+     main = "Weekday")
+plot(meanweekend$interval, meanweekend$intmean,
+     type = "l", col="red", ylim=c(0,250), xlab = "interval",
+     ylab = "average number of steps, weekend",
+     main = "Weekend")
 ```
