@@ -107,3 +107,14 @@ activitywkd <- activity %>%
   transform( fullwkday = as.factor(weekdays(as.Date(date))),
              wkdtype = as.factor(sapply(weekdays(as.Date(date)), convdaytype)) )
 ```
+
+2. Here are the plots. As expected, we can see that activity on
+work days starts earlier than weekends, but it also finishes earlier.
+```{r}
+meanperintwkd <- activitywkd %>% group_by(interval, wkdtype) %>%
+  summarize(intmean=mean(steps, na.rm=TRUE))
+meanworkday <- meanperintwkd %>% filter(wkdtype == "weekday")
+meanweekend <- meanperintwkd %>% filter(wkdtype == "weekend")
+plot(meanworkday$interval, meanworkday$intmean, type = "l", col="blue")
+lines(meanweekend$interval, meanweekend$intmean, type = "l", col="red")
+```
