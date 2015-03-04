@@ -55,7 +55,7 @@ plot(meanperint, type = "l", ylab = "average number of steps per interval")
 meanperint[which.max(meanperint$intmean),]$interval
 ```
 
-## Inputing missing values
+## Imputing missing values
 
 1. The total number of missing values in the dataset is:
 ```{r}
